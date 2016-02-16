@@ -13,13 +13,15 @@
 		<script src='lib/quintus_touch.js'></script>
 		<script src='lib/quintus_ui.js'></script>
 		<script src='lib/quintus_audio.js'></script>
+		<script src='scripts/witchy-gui.js'></script>
+		<script src='scripts/witchy-enemies.js'></script>
 	
 	</head>
 	<body style="background-color: black;margin:0px;border:0px;" ng-app="starter">
 	<script>
 			window.addEventListener("load",function(){
 				var Q = window.Q = Quintus({development: true})
-				.include('Sprites, Scenes, 2D, UI')
+				.include('Sprites, Scenes, 2D, UI, WitchyGUI, WitchyEnemies')
 				.setup({
 					width: 600,
 					height: 400,
@@ -27,62 +29,14 @@
 				});
 
 				//constants
-				Q.SPRITE_HEMOGLOB = 4;
-				Q.SPRITE_SHARKGUY = 8;
+				Q.SPRITE_ENEMY = 4;
+				//Q.SPRITE_SHARKGUY = 8;
 				Q.SPRITE_BULLET = 16;
 				Q.SPRITE_GROUND = 32;
 
 				//turn off gravity
 				Q.gravityY = 0;
 				Q.gravityX = 0;
-
-
-				Q.Sprite.extend("Sharkguy", {
-					init: function(p){
-						this._super(p, {
-							asset: "sharkguy.gif",
-							type: Q.SPRITE_SHARKGUY,
-							vx: -45,
-							scale: .5,
-						});
-						this.add("2d");
-					},	
-
-					//deltatime, check for position of sprite
-					step: function(dt) {
-						//if current parameter is at 240 on x
-						if(this.p.x <=100) {
-							this.destroy();
-							console.log("You're a bloody mess!")
-							//restart game
-							Q.stageScene('level')
-						}
-					}
-
-				});
-
-
-				Q.Sprite.extend("Hemoglob", {
-					init: function(p){
-						this._super(p, {
-							asset: "hemoglob.gif",
-							type: Q.SPRITE_HEMOGLOB,
-							//vx and vy to change their speed
-							vx: -25,
-							scale: .75,
-						});
-						this.add("2d");
-					},
-					step: function(dt) {
-						//if current parameter is at 240 on x
-						if(this.p.x <=100) {
-							this.destroy();
-							console.log("You're a bloody mess!")
-							//restart game
-							Q.stageScene('level')
-						}
-					}
-				});
 
 				Q.scene("level",function(stage){
 					var background = new Q.Sprite({
@@ -91,65 +45,32 @@
 						asset: "redskybg.png",
 						type: Q.SPRITE_GROUND
 					});
-					var hemoglob1 = new Q.Hemoglob({
-						x: 370, 
-						y: 200,
-					});
-					var hemoglob2 = new Q.Hemoglob({
-						x: 390,
-						y: 100
-					});
-					var sharkguy1 = new Q.Sharkguy({
-						x: 499,
-						y: 300
 
-					});
+					var hemoglob1 = new Q.Enemy(
+					Q._extend({x: 370, y: 200}, Q.enemyTypes['hemoglob'])
+					);
+					var sharkguy1 = new Q.Enemy(
+					Q._extend({x:390, y: 100}, Q.enemyTypes['sharkguy'])	
+					);
+					var sharkguy2 = new Q.Enemy(
+					Q._extend({x:499, y:300}, Q.enemyTypes['sharkguy'])
+					);
 
 					stage.insert(background);
-					stage.insert(hemoglob1);
-					stage.insert(hemoglob2);
 					stage.insert(sharkguy1);
+					stage.insert(hemoglob1);
+					stage.insert(sharkguy2);
 
 					var sidePanel = new Q.SidePanel();
 					stage.insert(sidePanel);
-				});
+				})
 
 				Q.load("nighttimebg.png, redskybg.png, cutiewitch.gif, sharkguy.gif, hemoglob.gif, potion.png", function(){
 					Q.stageScene("level");
-				});
-
-				Q.UI.Container.extend("SidePanel", {
-					init: function() {
-						this._super({
-							fill: '#ccccff',
-							x: 120/2,
-							y: 30/2,
-							radius: 10,
-							border: 5,  
-							shadow: 0,
-							w: 90,
-							h: 120,
-						});
-
-					this.on("inserted");	
-					},
-					inserted: function() {
-						var potion = new Q.Sprite({
-							asset: 'potion.png',
-							x: 60,
-							y: 40, 
-							scale: .85,
-						});
-						this.stage.insert(potion);
-
-						/*this.totalPotion = new Q.UI.Text({
-							x: 60,
-							y: 40,
-							label: "potion"
-						})*/
-					}
 				})
 			});
+
+				
 		</script>
 	</body>
 </html>
