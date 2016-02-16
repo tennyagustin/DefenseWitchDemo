@@ -16,13 +16,13 @@ Quintus.WitchyGUI = function(Q) {
 					this.on("inserted");	
 					},
 					inserted: function() {
-						var potion = new Q.Sprite({
+						/*var potion = new Q.Sprite({
 							asset: 'potion.png',
 							x: 60,
 							y: 40, 
 							scale: .85,
 						});
-						this.stage.insert(potion);
+						this.stage.insert(potion); 
 
 						/*this.totalPotion = new Q.UI.Text({
 							x: 60,

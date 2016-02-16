@@ -15,13 +15,15 @@
 		<script src='lib/quintus_audio.js'></script>
 		<script src='scripts/witchy-gui.js'></script>
 		<script src='scripts/witchy-enemies.js'></script>
-	
+		<script src='scripts/witchy-protag.js'></script>
+		<script src='scripts/witchy-items.js'></script>
+
 	</head>
 	<body style="background-color: black;margin:0px;border:0px;" ng-app="starter">
 	<script>
 			window.addEventListener("load",function(){
 				var Q = window.Q = Quintus({development: true})
-				.include('Sprites, Scenes, 2D, UI, WitchyGUI, WitchyEnemies')
+				.include('Sprites, Scenes, 2D, UI, Touch, WitchyGUI, WitchyEnemies, WitchyProtagonist, WitchyItems')
 				.setup({
 					width: 600,
 					height: 400,
@@ -29,16 +31,23 @@
 				});
 
 				//constants
-				Q.SPRITE_ENEMY = 4;
+				Q.SPRITE_CHOCOLATE = 2;
+				Q.SPRITE_PLAYER = 4;
+				Q.SPRITE_ENEMY = 8;
 				//Q.SPRITE_SHARKGUY = 8;
 				Q.SPRITE_BULLET = 16;
 				Q.SPRITE_GROUND = 32;
+
+				//enable touch
+				Q.touch(Q.SPRITE_CHOCOLATE);
+				//Q.touch(Q.SPRITE_ENEMY);
 
 				//turn off gravity
 				Q.gravityY = 0;
 				Q.gravityX = 0;
 
 				Q.scene("level",function(stage){
+
 					var background = new Q.Sprite({
 						x: 600/2,
 						y: 400/2,
@@ -46,26 +55,33 @@
 						type: Q.SPRITE_GROUND
 					});
 
+					var chocolate1 = new Q.Chocolate();
+
 					var hemoglob1 = new Q.Enemy(
-					Q._extend({x: 370, y: 200}, Q.enemyTypes['hemoglob'])
+					Q._extend({x: 370, y: 200}, Q.enemyTypes['sharkguy'])
 					);
 					var sharkguy1 = new Q.Enemy(
 					Q._extend({x:390, y: 100}, Q.enemyTypes['sharkguy'])	
 					);
 					var sharkguy2 = new Q.Enemy(
-					Q._extend({x:499, y:300}, Q.enemyTypes['sharkguy'])
+					Q._extend({x:499, y:300}, Q.enemyTypes['hemoglob'])
 					);
 
+					var player = new Q.Player();
+
+					//stage.insert(player);
 					stage.insert(background);
 					stage.insert(sharkguy1);
 					stage.insert(hemoglob1);
 					stage.insert(sharkguy2);
+					stage.insert(chocolate1);
+					stage.insert(player);
 
 					var sidePanel = new Q.SidePanel();
 					stage.insert(sidePanel);
 				})
 
-				Q.load("nighttimebg.png, redskybg.png, cutiewitch.gif, sharkguy.gif, hemoglob.gif, potion.png", function(){
+				Q.load("nighttimebg.png, redskybg.png, flyingcutiewitch.png, sharkguy.gif, hemoglob.gif, chocolate.png", function(){
 					Q.stageScene("level");
 				})
 			});

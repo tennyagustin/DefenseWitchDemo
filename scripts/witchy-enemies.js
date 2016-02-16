@@ -3,13 +3,13 @@ Quintus.WitchyEnemies = function(Q) {
 Q.enemyTypes = {
 	hemoglob: {
 		asset: 'hemoglob.gif',
-		vx: -25,
-		scale: .75
+		vx: -35,
+		scale: .75,
 	},
 	sharkguy: {
 		asset: 'sharkguy.gif',
 		vx: -45,
-		scale: .5
+		scale: .45,
 	}
 },
 
@@ -24,7 +24,7 @@ Q.enemyTypes = {
 			},
 		step: function(dt) {
 			if(this.p.x<=120) {
-				this.destroy();;
+				this.destroy();
 				console.log('You are a bloody mess!');
 				Q.stageScene('level')
 			}
