@@ -15,7 +15,6 @@
 		<script src='lib/quintus_audio.js'></script>
 		<script src='scripts/witchy-gui.js'></script>
 		<script src='scripts/witchy-enemies.js'></script>
-		<script src='scripts/witchy-protag.js'></script>
 		<script src='scripts/witchy-items.js'></script>
 
 	</head>
@@ -23,12 +22,16 @@
 	<script>
 			window.addEventListener("load",function(){
 				var Q = window.Q = Quintus({development: true})
-				.include('Sprites, Scenes, 2D, UI, Touch, WitchyGUI, WitchyEnemies, WitchyProtagonist, WitchyItems')
-				.setup({
-					width: 600,
-					height: 400,
-					scaleToFit: true,
-				});
+				.include('Sprites, Scenes, Touch, Input, 2D, UI, WitchyGUI, WitchyEnemies, WitchyItems')
+				.setup({ width: 600, height: 400, scaleToFit: true
+				})
+				.controls(true)
+				.touch();
+
+
+				//turn off gravity
+				Q.gravityY = 0;
+				Q.gravityX = 0;
 
 				//constants
 				Q.SPRITE_CHOCOLATE = 2;
@@ -38,15 +41,40 @@
 				Q.SPRITE_BULLET = 16;
 				Q.SPRITE_GROUND = 32;
 
+				Q.Sprite.extend("Player", {
+					init: function(p) {
+						this._super(p, {
+							asset: "flyingcutiewitch.png",
+							x: 100,
+							y: 300,
+							scale: .3,
+							type: Q.SPRITE_PLAYER,
+						});
+						//this.add('2d, stepControls');
+						this.on("drag");
+						this.on("touchEnd");
+					},
+
+					drag: function(touch) {
+						this.p.dragging = true;
+						this.p.x = touch.origX + touch.dx;
+						this.p.y = touch.origY + touch.dy;
+					},
+
+					touchEnd: function(touch) {
+						this.p.dragging=false;
+					},
+
+				});
+
 				//enable touch
-				Q.touch(Q.SPRITE_CHOCOLATE);
+				Q.touch(Q.SPRITE_PLAYER);
+				//Q.touch(Q.SPRITE_CHOCOLATE);
 				//Q.touch(Q.SPRITE_ENEMY);
 
-				//turn off gravity
-				Q.gravityY = 0;
-				Q.gravityX = 0;
-
 				Q.scene("level",function(stage){
+
+					var player = stage.insert(new Q.Player());
 
 					var background = new Q.Sprite({
 						x: 600/2,
@@ -54,6 +82,8 @@
 						asset: "redskybg.png",
 						type: Q.SPRITE_GROUND
 					});
+
+					//var player = new Q.Player();
 
 					var chocolate1 = new Q.Chocolate();
 
@@ -67,24 +97,48 @@
 					Q._extend({x:499, y:300}, Q.enemyTypes['hemoglob'])
 					);
 
-					var player = new Q.Player();
-
-					//stage.insert(player);
 					stage.insert(background);
+					stage.insert(player);
 					stage.insert(sharkguy1);
 					stage.insert(hemoglob1);
 					stage.insert(sharkguy2);
 					stage.insert(chocolate1);
-					stage.insert(player);
+
 
 					var sidePanel = new Q.SidePanel();
 					stage.insert(sidePanel);
 				})
 
 				Q.load("nighttimebg.png, redskybg.png, flyingcutiewitch.png, sharkguy.gif, hemoglob.gif, chocolate.png", function(){
+					Q.state.reset({chocolate: 0, lives: 3});
 					Q.stageScene("level");
+
+
+  var currentObj = null;
+
+ /*
+  Q.el.addEventListener('mousemove',function(e) {
+    var x = e.offsetX || e.layerX,
+        y = e.offsetY || e.layerY,
+        stage = Q.stage();
+ 
+    var stageX = Q.canvasToStageX(x, stage),
+        stageY = Q.canvasToStageY(y, stage);
+
+    var obj = stage.locate(stageX,stageY);
+
+    if(currentObj) { currentObj.p.over = false; }
+    if(obj) {
+      currentObj = obj;
+      obj.p.over = true;
+    }
+  }); */
+
 				})
-			});
+				
+
+			}
+			);
 
 				
 		</script>
