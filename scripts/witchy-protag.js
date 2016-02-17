@@ -4,13 +4,18 @@ Quintus.WitchyProtagonist = function(Q) {
 		init: function(p){
 			this._super(p, {
 				sheet: "player",
-				x: 10,
+				x: 410,
 				y: 90,
-				asset: 'cutiewitch.gif',
+				asset: 'flyingcutiewitch.png',
+				type: Q.SPRITE_PLAYER,
 				collisionMask: Q.SPRITE_ENEMY
 			});
 			this.add("2d, platformerControls");
-			}
-			
-	})
-};
+			this.on("hit.sprite",function(collision){
+				if(collision.obj.isA("Enemy")){
+					Q.stageScene("endGame",1,{ label: "You died!"});
+					this.destroy();
+				}
+					
+	});
+	

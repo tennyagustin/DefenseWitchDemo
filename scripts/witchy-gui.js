@@ -13,22 +13,42 @@ Quintus.WitchyGUI = function(Q) {
 							h: 120,
 						});
 
-					this.on("inserted");	
+					this.on("inserted");
+
+					var panel = this;
+					Q.state.on("change.chocolate", function(){
+						panel.refreshStats();
+					});	
 					},
 					inserted: function() {
-						/*var potion = new Q.Sprite({
-							asset: 'potion.png',
+						var chocolate = new Q.Sprite({
+							asset: 'chocolate.png',
 							x: 60,
 							y: 40, 
-							scale: .85,
 						});
-						this.stage.insert(potion); 
+						this.stage.insert(chocolate);
 
-						/*this.totalPotion = new Q.UI.Text({
+						this.totalChocolate = new Q.UI.Text({
 							x: 60,
 							y: 40,
-							label: "potion"
-						})*/
+							label: "0"
+						});
+						this.stage.insert(this.totalChocolate);
+
+						this.refreshStats();
+					},
+					refreshStats: function() {
+						this.totalChocolate.p.label = Q.state.get("chocolate") + "";
 					}
-})
+});
+
+			/*	
+			Q.UI.Button.extend("ShootButton", {
+				init: function(p) {
+					this._super(p, {
+						asset: "tapbutton.png"
+			}, function() {
+				Q.Player.shoot();
+			})
+			*/
 };

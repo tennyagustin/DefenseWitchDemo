@@ -1,0 +1,1 @@
+angular.module('starter'), ['ionic','quintus']) //in array is dependencies

@@ -13,7 +13,6 @@ Q.enemyTypes = {
 	}
 },
 
-
 	Q.Sprite.extend("Enemy", {
 		init: function(p){
 			this._super(p, {
