@@ -8,8 +8,13 @@ Q.enemyTypes = {
 	},
 	sharkguy: {
 		asset: 'sharkguy.gif',
-		vx: -45,
-		scale: .45,
+		vx: -55,
+		scale: .5,
+	},
+	vampy: {
+		asset: 'vampbat.png',
+		vx: -75,
+		scale: .55,
 	}
 },
 
@@ -24,7 +29,7 @@ Q.enemyTypes = {
 		step: function(dt) {
 			if(this.p.x<=120) {
 				this.destroy();
-				console.log('You are a bloody mess!');
+				console.log('They got you!');
 				Q.stageScene('level')
 			}
 		}

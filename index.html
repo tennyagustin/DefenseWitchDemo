@@ -28,7 +28,8 @@
 				})
 				.controls(true)
 				.touch();
-
+				
+				/*
 				Q.input.touchControls({
 					controls: [ [],
 								[],
@@ -36,15 +37,14 @@
 								[],
 								['fire','a']]
 				});
-
 				if(Q.inputs['fire']) {
 					Player.shoot();
 				}
+				*/
 
 				//turn off gravity
 				Q.gravityY = 0;
 				Q.gravityX = 0;
-
 				//constants
 				Q.SPRITE_CHOCOLATE = 2;
 				Q.SPRITE_PLAYER = 4;
@@ -52,124 +52,61 @@
 				Q.SPRITE_BULLET = 16;
 				Q.SPRITE_GROUND = 32;
 				Q.SPRITE_UI = 64;
-
-				Q.Sprite.extend("Player", {
-					init: function(p) {
-						this._super(p, {
-							asset: "flyingcutiewitch.png",
-							x: 100,
-							y: 300,
-							scale: .3,
-							type: Q.SPRITE_PLAYER,
-						});
-						//this.add('2d, stepControls');
-
-						//Q.input.on("fire", this, "shoot");
-
-						this.on("drag");
-						this.on("touchEnd");
-					},
-
-					drag: function(touch) {
-						this.p.dragging = true;
-						this.p.x = touch.origX + touch.dx;
-						this.p.y = touch.origY + touch.dy;
-					},
-
-					touchEnd: function(touch) {
-						this.p.dragging=false;
-					 },
-
-					shoot: function() {
-						var p = this.p;
-						this.stage.insert(new Q.Bullet({
-							x: p.x,
-							y: p.y - p.w/2,
-							vx: 300
-						})) 
-					}
-				});
-
-				Q.Sprite.extend("Bullet", {
-					init: function(p) {
-						this._super(p, {
-							type: Q.SPRITE_BULLET,
-							asset: "magicblob.png",
-							vx: 300
-						});
-						this.add('2d');
-					},
-					/*step: function(dt) {
-						//destroy when out of range
-						if(this.p.x => 1110) {
-							this.destroy();
-						}
-					} */
-				})
 				
 				//enable touch
 				Q.touch(Q.SPRITE_PLAYER | Q.SPRITE_CHOCOLATE | Q.SPRITE_UI);
 				//Q.touch(Q.SPRITE_CHOCOLATE);
-
 				//set scene with elements
 				Q.scene("level",function(stage){
 
 					//generate level
 					var level = new Q.Level();
 
+					//generate shoot button
+					var shootbutton = new Q.ShootButton();
+
 					//generate player
-					var player = stage.insert(new Q.Player());
+					var player = new Q.Player();
 
 					//generate chocolate
 					var chocolate1 = new Q.Chocolate();
 
 					//generate enemies
 					var hemoglob1 = new Q.Enemy(
-					Q._extend({x: 600, y: 200}, Q.enemyTypes['sharkguy'])
+					Q._extend({x: 600, y: 300}, Q.enemyTypes['hemoglob'])
 					);
 					var sharkguy1 = new Q.Enemy(
-					Q._extend({x:600, y: 100}, Q.enemyTypes['sharkguy'])	
+					Q._extend({x:600, y: 200}, Q.enemyTypes['sharkguy'])	
 					);
-					var sharkguy2 = new Q.Enemy(
-					Q._extend({x:600, y:300}, Q.enemyTypes['hemoglob'])
+					var vampbat1 = new Q.Enemy(
+					Q._extend({x:600, y:100}, Q.enemyTypes['vampy'])
 					);
 
 					//insert background
 					stage.insert(level);
 
 					//insert shoot button
-					stage.insert(new Q.UI.Button({
-						asset: "tapbutton.png",
-						type: Q.SPRITE_UI,
-						y: 360,
-						x: 750,
-						scale: 0.75,
-					}, function() {
-						Q.Player.shoot();
-					}));
+					stage.insert(shootbutton);
 
 					//insert actors
 					stage.insert(player);
-					stage.insert(sharkguy1);
 					stage.insert(hemoglob1);
-					stage.insert(sharkguy2);
+					stage.insert(sharkguy1);
+					stage.insert(vampbat1);
 					stage.insert(chocolate1);
 
 					//sidepanel for chocolate collection
 					var sidePanel = new Q.SidePanel();
 					stage.insert(sidePanel);
 				})
-
 				//element assets
-				Q.load("nighttimebg.png, redskybg.png, magicblob.png, flyingcutiewitch.png, sharkguy.gif, hemoglob.gif, chocolate.png, tapbutton.png", function(){
-
+				Q.load("nighttimebg.png, redskybg.png, magicblob.png, flyingcutiewitch.png, sharkguy.gif, hemoglob.gif, chocolate.png, vampbat.png, tapbutton.png", function(){
 					//chocolate counter, no lives yet
 					Q.state.reset({chocolate: 0, lives: 3});
 					Q.stageScene("level");
 				})
 			}
 			);
-
 				
 		</script>
 	</body>
