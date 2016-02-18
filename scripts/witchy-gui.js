@@ -68,11 +68,12 @@ Quintus.WitchyGUI = function(Q) {
 					 },
 					shoot: function() {
 						var p = this.p;
-						this.stage.insert(new Q.Bullet({
-							x: p.x,
-							y: p.y - p.w/2,
+						this.bullet = new Q.Bullet({
+							x: this.p.x,
+							y: this.p.y,
 							vx: 300
-						})) 
+						});
+						Q.stage().insert(this.bullet) 
 					}
 				});
 
@@ -89,7 +90,10 @@ Quintus.WitchyGUI = function(Q) {
 					this.on("touch");
 				},
 				touch: function(touch) {
+					var player = new Q.Player();
+					player.shoot();
 					console.log("you touched it, good job");
+					//user Player.Shoot function
 		}
 		});
 
