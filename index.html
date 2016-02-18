@@ -56,15 +56,49 @@
 				
 				//enable touch
 				Q.touch(Q.SPRITE_PLAYER | Q.SPRITE_CHOCOLATE | Q.SPRITE_UI);
-				//Q.touch(Q.SPRITE_CHOCOLATE);
+				
 				//set scene with elements
 				Q.scene("level",function(stage){
 
+					//first and foremost... generate player
+					var player = new Q.Player({x: 100, y: 300});
+
+					//shoot button constructor
+					Q.Sprite.extend("ShootButton", {
+						init: function() {
+							this._super({
+								asset: "tapbutton.png",
+								type: Q.SPRITE_UI,
+								y: 360,
+								x: 720,
+								scale: 0.75,
+					});
+					this.on("touch");
+					},
+						touch: function(touch) {
+							if(!player.moved) {
+							player.shoot(sx, sy);
+						} else {
+							player.shoot(this.p.x, this.p.y);
+						}
+					}
+					});
+
+					//bullet constructor
+					Q.MovingSprite.extend("Bullet", {
+							init: function(p) {
+									this._super(p, {
+										type: Q.SPRITE_BULLET,
+										asset: "magicblob.png",
+										vx: 300
+										//damage: 1,
+									});
+								this.add('2d');
+								},
+						})
+
 					//generate level
 					var level = new Q.Level();
-
-					//generate player
-					var player = new Q.Player();
 
 					//generate shoot button
 					var shootbutton = new Q.ShootButton();

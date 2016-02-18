@@ -30,7 +30,6 @@ Quintus.WitchyGUI = function(Q) {
 						this.stage.insert(chocolate);
 
 						this.totalChocolate = new Q.UI.Text({
-
 							x: 60,
 							y: 40,
 							label: "0"
@@ -44,12 +43,12 @@ Quintus.WitchyGUI = function(Q) {
 					},
 });
 
-			Q.Sprite.extend("Player", {
+			Q.MovingSprite.extend("Player", {
 					init: function(p) {
 						this._super(p, {
 							asset: "flyingcutiewitch.png",
-							x: 100,
-							y: 300,
+							sx: 100,
+							sy: 300,
 							scale: .3,
 							type: Q.SPRITE_PLAYER,
 						});
@@ -57,60 +56,28 @@ Quintus.WitchyGUI = function(Q) {
 						//Q.input.on("fire", this, "shoot");
 						this.on("drag");
 						this.on("touchEnd");
+						this.on("shoot");
 					},
 					drag: function(touch) {
+						var p = this.p;
 						this.p.dragging = true;
-						this.p.x = touch.origX + touch.dx;
-						this.p.y = touch.origY + touch.dy;
+						x: this.p.x = touch.origX + touch.dx;
+						y: this.p.y = touch.origY + touch.dy;
 					},
 					touchEnd: function(touch) {
 						this.p.dragging=false;
-					 },
-					shoot: function() {
+					},
+					moved: function() {
+     					 this.p.moved = true;
+    				},
+					shoot: function(touch) {
 						var p = this.p;
-						this.bullet = new Q.Bullet({
-							x: this.p.x,
-							y: this.p.y,
-							vx: 300
+						var bullet = new Q.Bullet({
+						x: this.p.x,
+						y: this.p.y,
+						vx: 300
 						});
-						Q.stage().insert(this.bullet) 
+						Q.stage().insert(bullet) 
 					}
 				});
-
-
-			Q.Sprite.extend("ShootButton", {
-					init: function() {
-						this._super({
-							asset: "tapbutton.png",
-							type: Q.SPRITE_UI,
-							y: 360,
-							x: 720,
-							scale: 0.75,
-					});
-					this.on("touch");
-				},
-				touch: function(touch) {
-					var player = new Q.Player();
-					player.shoot();
-					console.log("you touched it, good job");
-					//user Player.Shoot function
-		}
-		});
-
-		Q.Sprite.extend("Bullet", {
-				init: function(p) {
-						this._super(p, {
-							type: Q.SPRITE_BULLET,
-							asset: "magicblob.png",
-							vx: 300
-						});
-					this.add('2d');
-					},
-					/*step: function(dt) {
-						//destroy when out of range
-						if(this.p.x => 1110) {
-							this.destroy();
-						}
-					} */
-			})
 };
